@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kuang.dao.BookMapper">
+
+    <!--增加一个Book-->
+    <insert id="addBook" parameterType="Books">
+      insert into ssmbuild.books(bookName,bookCounts,detail,authorID)
+      values (#{bookName},#{bookCounts}, #{detail},#{authorID})
+   </insert>
+
+    <!--根据id删除一个Book-->
+    <delete id="deleteBookById" parameterType="int">
+      delete from ssmbuild.books where bookID=#{bookID}
+   </delete>
+
+    <!--更新Book-->
+    <update id="updateBook" parameterType="BookDetail">
+      update ssmbuild.books
+	  set ssmbuild.books.bookName = #{bookName},ssmbuild.books.bookCounts = #{bookCounts},ssmbuild.books.detail = #{detail},ssmbuild.books.authorID =(select ssmbuild.authors.authorID from ssmbuild.authors WHERE ssmbuild.authors.authorName = #{authorName})
+	  where ssmbuild.books.bookID = #{bookID}
+   </update>
+
+    <!--根据id查询,返回一个Book-->
+    <select id="queryBookById" resultType="BookDetail">
+      select books.*,authors.authorName from ssmbuild.books,ssmbuild.authors where bookID = #{bookID} and ssmbuild.books.authorID = ssmbuild.authors.authorID
+   </select>
+
+    <!--查询全部Book-->
+    <select id="queryAllBook" resultType="BookDetail">
+      SELECT books.*,authors.authorName from ssmbuild.books,ssmbuild.authors where ssmbuild.books.authorID = ssmbuild.authors.authorID;
+   </select>
+
+    <!--根据书名查询,返回一个Book-->
+    <select id="queryBookByName" resultType="BookDetail">
+        select books.*,authors.authorName from ssmbuild.books,ssmbuild.authors where ssmbuild.books.authorID = ssmbuild.authors.authorID and bookName = #{bookName}
+    </select>
+
+</mapper>
